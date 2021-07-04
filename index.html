@@ -55,13 +55,17 @@
                 this.addWindow(new Window(this));
                 this.addWindow(new Window(this));
             }
+            this.bringWindowUp = function(targetWindow) {
+                this.topLayerIndex += 1
+                targetWindow.el.style.zIndex = this.topLayerIndex;
+            }
             this.addWindow = function(newWindow) {
                 this.windows.push(newWindow);
-                newWindow.el.style.zIndex = this.topLayerIndex;
-                this.topLayerIndex += 1;
+                this.bringWindowUp(newWindow);
                 this.spawnPos.x += 35;
                 this.spawnPos.y += 45;
             }
+
             this.init();
         }
 
@@ -112,12 +116,12 @@
                 this.compos.resizeInterface = new ResizeLayer(this);
             }
             this.handleMouseDown = function(e) {
-                this.controller.topLayerIndex += 1
-                this.el.style.zIndex = this.controller.topLayerIndex;
-
+                this.controller.bringWindowUp(this);
             }
             this.setupListeners = function() {
-                this.el.addEventListener("mousedown", e => this.handleMouseDown(e));
+                this.el.addEventListener("mousedown", e => {
+                    this.handleMouseDown(e);
+                });
                 this.el.addEventListener("touchstart", e => {
                     e.stopPropagation();
                     e.preventDefault();
@@ -159,6 +163,9 @@
             }
             this.setupListeners = function() {
                 this.el.addEventListener("mousedown", (e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.window.handleMouseDown(e);
                     this.handleMouseDown(e);
                 });
                 this.el.addEventListener("touchstart", (e) => {
@@ -166,6 +173,7 @@
                     e.preventDefault();
                     e.pageX = e.touches[0].pageX;
                     e.pageY = e.touches[0].pageY;
+                    this.window.handleMouseDown(e);
                     this.handleMouseDown(e);
                 });
             }
@@ -174,6 +182,7 @@
 
         function ResizeLayer(parent) {
             this.el = null;
+            this.window = parent;
             this.startValue = {w:null, h:null};
 
             this.init = function () {
@@ -219,6 +228,7 @@
                             e.preventDefault();
                             e.pageX = e.touches[0].pageX;
                             e.pageY = e.touches[0].pageY;
+                            this.window.handleMouseDown(e);
                             this.handleMouseDown(e);
                         });
                 })

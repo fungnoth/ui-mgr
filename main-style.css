@@ -10,10 +10,7 @@ html, body {
 }
 
 body {
-  background-image: url("roberto-nickson-lGCfApDzhYw-unsplash.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  margin: 0;
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
   -webkit-user-select: none;
@@ -178,6 +175,10 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  background-image: url("roberto-nickson-lGCfApDzhYw-unsplash.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .template {
