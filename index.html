@@ -311,7 +311,7 @@
                     this.handleMouseDown(e);
                 });
 
-                this.el.querySelector(".btn-exit").addEventListener("click", (e) => {
+                this.closeWindow = function() {
                     let windowEl = this.window.el;
                     windowEl.classList.add("close");
                     windowEl.addEventListener('animationend', () => {
@@ -320,7 +320,10 @@
                     setTimeout(()=> {
                         windowsController.closeWindow(this.window);
                     }, 1000);
-                });
+                }
+
+                this.el.querySelector(".btn-exit").addEventListener("click", (e) => this.closeWindow());
+                this.el.querySelector(".btn-exit").addEventListener("touchstart", (e) => this.closeWindow());
             }
             this.init();
         }
