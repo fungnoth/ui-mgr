@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap");
+html, body {
+  min-height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url("roberto-nickson-lGCfApDzhYw-unsplash.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  user-select: none;
+  overflow: hidden;
+}
+body {
+  color: #efefef;
+}
+
+.main-area {
+  display: flex;
+  flex-grow: 1;
+}
+
+.window {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  min-width: 300px;
+  min-height: 200px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-content: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.window .header {
+  display: flex;
+  width: 100%;
+  align-content: center;
+  background: rgba(67, 67, 67, 0.3);
+  backdrop-filter: blur(65px) brightness(0.5);
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) inset;
+  transition: 0.3s background-color;
+}
+.window .header .title-bar {
+  display: flex;
+}
+.window .header .title-bar img {
+  width: 23px;
+  margin: -4px -2px;
+  margin-right: 4px;
+}
+.window .header .title-bar span {
+  margin-left: 4px;
+}
+.window .menu {
+  height: 100%;
+  padding: 20px 10px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(65px) brightness(0.5);
+  padding-right: 0;
+  width: 140px;
+  transition: 0.3s background-color;
+}
+.window .menu ul {
+  list-style: none;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 0px;
+}
+.window .menu ul li.category-title {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.8;
+  padding-left: 4px;
+}
+.window .menu ul li {
+  font-size: 13px;
+  padding: 5px 4px;
+  padding-left: 13px;
+}
+.window .content {
+  background: #1c1c1c;
+  flex-grow: 1;
+  padding: 20px 15px;
+  height: 100%;
+  transition: 0.3s background-color;
+}
+
+.light {
+  color: #333;
+}
+.light .header {
+  backdrop-filter: blur(30px);
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.light .content {
+  background: #FFF;
+}
+.light .menu {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+}
+
+.resize-interface .resize-touch-area {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  z-index: 500;
+}
+.resize-interface .resize-touch-area.top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  cursor: ns-resize;
+}
+.resize-interface .resize-touch-area.bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  cursor: ns-resize;
+}
+.resize-interface .resize-touch-area.left {
+  top: 0;
+  left: 0;
+  height: 100%;
+  cursor: ew-resize;
+}
+.resize-interface .resize-touch-area.right {
+  top: 0;
+  right: 0;
+  height: 100%;
+  cursor: ew-resize;
+}
+.resize-interface .resize-touch-area.top-left {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+.resize-interface .resize-touch-area.top-right {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+.resize-interface .resize-touch-area.bottom-left {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+.resize-interface .resize-touch-area.bottom-right {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+#windows-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.template {
+  display: none;
+}
+
+/*# sourceMappingURL=main-style.css.map */

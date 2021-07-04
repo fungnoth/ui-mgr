@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    <link rel="stylesheet" href="main-style.css">
+</head>
+<body class="light">
+    <div id="windows-container">
+
+    </div>
+    <div id="resize-template" class="resize-elements template">
+        <div class="resize-touch-area top"></div>
+        <div class="resize-touch-area left"></div>
+        <div class="resize-touch-area right"></div>
+        <div class="resize-touch-area bottom"></div>
+        <div class="resize-touch-area top-left"></div>
+        <div class="resize-touch-area top-right"></div>
+        <div class="resize-touch-area bottom-left"></div>
+        <div class="resize-touch-area bottom-right"></div>
+    </div>
+    <div id="window-template" class="window template">
+        <div class="header">
+            <div class="title-bar">
+                <span>Unnamed Folder</span>
+            </div>
+        </div>
+        <div class="main-area">
+            <div class="menu">
+                <ul>
+                    <li class="category-title">Quick Access</li>
+                    <li>Download</li>
+                    <li>Documents</li>
+                    <li>Desktop</li>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="content">
+                <div class="item">
+                    <div class="icon"></div>
+                    <div class="filename">file.txt</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function WindowsController() {
+            this.windows = [];
+            this.spawnPos = {x:25, y:25};
+            this.topLayerIndex = 0;
+            this.init = function() {
+                this.addWindow(new Window(this));
+                this.addWindow(new Window(this));
+            }
+            this.addWindow = function(newWindow) {
+                this.windows.push(newWindow);
+                newWindow.el.style.zIndex = this.topLayerIndex;
+                this.topLayerIndex += 1;
+                this.spawnPos.x += 35;
+                this.spawnPos.y += 45;
+            }
+            this.init();
+        }
+
+        function DragController() {
+            this.activeItem = null;
+            this.offsets = {x:0, y:0};
+            this.handleMouseMove = function(e) {
+                if (!this.activeItem) {
+                    return;
+                }
+                this.activeItem.handleMouseMove(e);
+            }
+            this.handleMouseUp = function(e) {
+                if (!this.activeItem) {
+                    return;
+                }
+                this.activeItem.handleMouseUp(e);
+                this.activeItem = null;
+            }
+
+            window.addEventListener("mousemove", e => this.handleMouseMove(e));
+            window.addEventListener("mouseup", e => this.handleMouseUp(e));
+        }
+
+        function Window(controller, spawnPos) {
+            this.el = null;
+            this.controller = controller;
+            this.spawnPos = spawnPos ? spawnPos : controller.spawnPos;
+
+            this.init = function() {
+                this.render();
+                this.setupListeners();
+                this.compos = {};
+                this.compos.header = new WindowHeader(this);
+                this.compos.resizeInterface = new ResizeLayer(this);
+            }
+            this.handleMouseDown = function(e) {
+                this.controller.topLayerIndex += 1
+                this.el.style.zIndex = this.controller.topLayerIndex;
+
+            }
+            this.setupListeners = function() {
+                this.el.addEventListener("mousedown", e => this.handleMouseDown(e));
+            }
+            this.render = function() {
+                let template = document.querySelector("#window-template");
+                this.el = template.cloneNode(true);
+                this.el.id = "";
+                this.el.classList.remove("template");
+                this.el.style.left = this.spawnPos.x + "px";
+                this.el.style.top = this.spawnPos.y + "px";
+                document.querySelector("#windows-container").appendChild(this.el);
+            }
+            this.init();
+        }
+        function WindowHeader(windowInstance) {
+            this.init = function() {
+                this.window = windowInstance;
+                this.dragging = false;
+                this.el = this.window.el.querySelector(".header");
+                this.setupListeners();
+            }
+            this.handleMouseDown = function(e) {
+                dragController.activeItem = this;
+                let rect = this.window.el.getBoundingClientRect();
+                dragController.offsets.x = e.pageX - rect.left;
+                dragController.offsets.y = e.pageY - rect.top;
+            }
+            this.handleMouseMove = function(e) {
+                const el = this.window.el;
+                let targetX = _.clamp(e.pageX, 10, window.innerWidth - 10);
+                let targetY = _.clamp(e.pageY, 10, window.innerHeight - 10);
+                el.style.left = targetX - dragController.offsets.x + "px";
+                el.style.top  = targetY - dragController.offsets.y + "px";
+            }
+            this.handleMouseUp = function(e) {
+            }
+            this.setupListeners = function() {
+                this.el.addEventListener("mousedown", (e) => {
+                        this.handleMouseDown(e);
+                    });
+            }
+            this.init();
+        }
+
+        function ResizeLayer(parent) {
+            this.el = null;
+            this.startValue = {w:null, h:null};
+
+            this.init = function () {
+                this.template = document.querySelector("#resize-template");
+                this.parentEl = parent.el;
+                this.render();
+                this.setupListeners();
+            }
+
+            this.render = function() {
+                if (this.el) {
+                    this.el.remove();
+                }
+                this.el = this.template.cloneNode(true);
+                this.parentEl.classList.add("resize-interface");
+                for (let node of this.el.children) {
+                    this.parentEl.appendChild(node.cloneNode());
+                }
+            }
+
+            this.handleMouseDown = function(e) {
+                this.startValue.w = this.parentEl.offsetWidth;
+                this.startValue.h = this.parentEl.offsetHeight;
+
+                dragController.activeItem = this;
+                dragController.offsets.x = e.pageX;
+                dragController.offsets.y = e.pageY;
+            }
+            this.handleMouseMove = function(e) {
+                this.parentEl.style.width  = this.startValue.w + (e.pageX - dragController.offsets.x) + "px";
+                this.parentEl.style.height = this.startValue.h + (e.pageY - dragController.offsets.y) + "px";
+            }
+            this.handleMouseUp = function(e) {
+            }
+            this.setupListeners = function() {
+                this.parentEl
+                    .querySelectorAll(".resize-touch-area").forEach((area)=> {
+                        area.addEventListener("mousedown", (e) => {
+                            this.handleMouseDown(e);
+                        });
+                })
+            }
+
+            this.init();
+        }
+
+        window.windowsController = new WindowsController();
+        window.dragController = new DragController();
+    </script>
+</body>
+</html>
