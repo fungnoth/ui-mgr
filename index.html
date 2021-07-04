@@ -52,8 +52,12 @@
             this.spawnPos = {x:25, y:25};
             this.topLayerIndex = 0;
             this.init = function() {
-                this.addWindow(new Window(this));
-                this.addWindow(new Window(this));
+                setTimeout(() => {
+                    this.addWindow(new Window(this));
+                }, 300);
+                setTimeout(() => {
+                    this.addWindow(new Window(this));
+                }, 400);
             }
             this.bringWindowUp = function(targetWindow) {
                 this.topLayerIndex += 1
@@ -236,9 +240,11 @@
 
             this.init();
         }
-
-        window.windowsController = new WindowsController();
-        window.dragController = new DragController();
+        window.addEventListener('load', function () {
+            document.querySelector("#windows-container").classList.add("show");
+            window.windowsController = new WindowsController();
+            window.dragController = new DragController();
+        })
     </script>
 </body>
 </html>
