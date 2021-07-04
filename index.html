@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="main-style.css">
 </head>
 <body class="light">
-    <div id="windows-container" class="windows-container">
+    <div id="container" class="container">
+
+    </div>
+    <div class="desktop file-icon-list flex-column">
 
     </div>
     <div id="resize-template" class="resize-elements template">
@@ -24,7 +27,12 @@
     <div id="window-template" class="window template">
         <div class="header">
             <div class="title-bar">
-                <span>Unnamed Folder</span>
+                <span></span>
+            </div>
+            <div class="buttons">
+                <div class="title-btn btn-exit">
+                    <span class="material-icons material-icons-outlined">close</span>
+                </div>
             </div>
         </div>
         <div class="main-area">
@@ -37,27 +45,127 @@
                     <li></li>
                 </ul>
             </div>
-            <div class="content">
-                <div class="item">
-                    <div class="icon"></div>
-                    <div class="filename">file.txt</div>
-                </div>
+            <div class="content file-icon-list smaller">
             </div>
         </div>
     </div>
+    <div id="file-icon-template" class="file-icon template">
+        <div class="icon">
+            <span class="material-icons material-icons-outlined">
+                folder
+            </span>
+        </div>
+        <div class="filename">file.txt</div>
+    </div>
+    <div id="file-list-template" class="file-icon-list template">
+    </div>
 
     <script>
+        function FileIcon(title, content, parentEl) {
+            this.title = title;
+            this.parentEl = parentEl;
+            this.content = content;
+            this.el = null;
+            this.lastClickTime = null;
+            this.open = function() {
+                let newWindow = new Window(windowsController)
+                newWindow.title = this.title;
+                if (this.content instanceof Object) {
+                    newWindow.compos.fileListView = new FileListView(newWindow.el.querySelector(".content"), content);
+                }
+                windowsController.addWindow(newWindow);
+
+            }
+            this.toggleSelect = function() {
+                this.parentEl.querySelectorAll(".selected").forEach((item) => {
+                    if (item === this.el) {
+                        return;
+                    }
+                    item.classList.remove("selected");
+                })
+                this.el.classList.toggle("selected");
+            }
+            this.checkDoubleClick = function(interval) {
+                this.toggleSelect();
+                if (this.lastClickTime && (Date.now() - this.lastClickTime) <= interval) {
+                    this.lastClickTime = null;
+                    return true;
+                } else {
+                    this.lastClickTime = Date.now();
+                    return false;
+                }
+            }
+
+            this.setupListeners = function() {
+                this.el.addEventListener("mousedown", e => {
+                    if (this.checkDoubleClick(500)) {
+                        this.open();
+                    }
+                });
+                this.el.addEventListener("touchstart", e => {
+                    if (this.checkDoubleClick(1000)) {
+                        this.open();
+                    }
+                });
+            }
+            this.update = function () {
+                this.el.querySelector(".filename").innerHTML = this.title;
+            }
+
+            this.render = function () {
+                let template = document.querySelector("#file-icon-template");
+                this.el = template.cloneNode(true);
+                this.el.id = "";
+                this.el.classList.remove("template");
+                this.parentEl.appendChild(this.el);
+                this.update();
+            }
+
+            this.init = function() {
+                this.render();
+                this.setupListeners();
+            }
+
+            this.init()
+        }
+
+        function ThemeController() {
+            this.themeList = ["dark", "light"];
+
+            this.getSystemTheme = function() {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    return "dark";
+                } else {
+                    return "light";
+                }
+            }
+            this.changeTheme = function(theme) {
+                for (let item of this.themeList) {
+                    document.body.classList.remove(item);
+                }
+                if (this.themeList.includes(theme)) {
+                    document.body.classList.add(theme);
+                } else {
+                    document.body.classList.add(this.themeList[0]);
+                }
+            }
+            this.init = function () {
+                this.changeTheme(this.getSystemTheme());
+            }
+            this.init();
+        }
+
         function WindowsController() {
+            const defaultSpawnPos = {x:45, y:45};
             this.windows = [];
-            this.spawnPos = {x:25, y:25};
+            this.spawnPos = Object.assign({}, defaultSpawnPos);
             this.topLayerIndex = 0;
             this.init = function() {
-                setTimeout(() => {
-                    this.addWindow(new Window(this));
-                }, 300);
-                setTimeout(() => {
-                    this.addWindow(new Window(this));
-                }, 400);
+                // setTimeout(() => {
+                //     let newWindow = new Window(this);
+                //     newWindow.title = "Unnamed Folder (2)";
+                //     this.addWindow(newWindow);
+                // }, 100);
             }
             this.bringWindowUp = function(targetWindow) {
                 this.topLayerIndex += 1
@@ -65,12 +173,27 @@
             }
             this.addWindow = function(newWindow) {
                 this.windows.push(newWindow);
-                this.bringWindowUp(newWindow);
                 this.spawnPos.x += 35;
                 this.spawnPos.y += 45;
+                if ((this.spawnPos.x > window.innerWidth)
+                    || (this.spawnPos.y > window.innerHeight)) {
+                    this.spawnPos = Object.assign({}, defaultSpawnPos)
+                }
+                setTimeout(()=> {
+                    this.bringWindowUp(newWindow);
+                });
             }
-
-            this.init();
+            this.closeWindow = function(targetWindow) {
+                let targetIndex = this.windows.indexOf(targetWindow);
+                if (targetWindow && targetIndex !== false) {
+                    this.windows.splice(targetIndex, 1);
+                    targetWindow.el.remove();
+                    delete targetWindow;
+                }
+            }
+            setTimeout(() => {
+                this.init();
+            }, 500);
         }
 
         function DragController() {
@@ -109,6 +232,7 @@
 
         function Window(controller, spawnPos) {
             this.el = null;
+            this.title = "&nbsp;";
             this.controller = controller;
             this.spawnPos = spawnPos ? spawnPos : controller.spawnPos;
 
@@ -118,6 +242,9 @@
                 this.compos = {};
                 this.compos.header = new WindowHeader(this);
                 this.compos.resizeInterface = new ResizeLayer(this);
+                setTimeout(()=>{
+                    this.update();
+                });
             }
             this.handleMouseDown = function(e) {
                 this.controller.bringWindowUp(this);
@@ -132,6 +259,9 @@
                     this.handleMouseDown(e)
                 });
             }
+            this.update = function() {
+                this.el.querySelector(".title-bar span").innerHTML = this.title;
+            }
             this.render = function() {
                 let template = document.querySelector("#window-template");
                 this.el = template.cloneNode(true);
@@ -139,7 +269,7 @@
                 this.el.classList.remove("template");
                 this.el.style.left = this.spawnPos.x + "px";
                 this.el.style.top = this.spawnPos.y + "px";
-                document.querySelector("#windows-container").appendChild(this.el);
+                document.querySelector("#container").appendChild(this.el);
             }
             this.init();
         }
@@ -180,8 +310,50 @@
                     this.window.handleMouseDown(e);
                     this.handleMouseDown(e);
                 });
+
+                this.el.querySelector(".btn-exit").addEventListener("click", (e) => {
+                    let windowEl = this.window.el;
+                    windowEl.classList.add("close");
+                    windowEl.addEventListener('animationend', () => {
+                        windowsController.closeWindow(this.window);
+                    });
+                    setTimeout(()=> {
+                        windowsController.closeWindow(this.window);
+                    }, 1000);
+                });
             }
             this.init();
+        }
+
+        const fileSystem = {
+            "C:": {
+                "Desktop": {
+                    "New Folder": {
+                        "file.txt": "Welcome to Wikipedia,\nthe free encyclopedia that anyone can edit.\n6,329,854 articles in English"
+                    }
+                }
+            }
+        }
+
+        function FileListView(parentEl, directory) {
+            this.parentEl = parentEl;
+            this.el = null;
+            this.icons = [];
+            this.directory = fileSystem["C:"].Desktop;
+            this.renderFiles = function() {
+                for (let filename in directory) {
+                    this.icons.push(new FileIcon(filename, directory[filename], this.el));
+                }
+            }
+            this.render = function() {
+                let template = document.querySelector("#file-list-template");
+                this.el = template.cloneNode(true);
+                this.el.id = "";
+                this.el.classList.remove("template");
+                this.parentEl.appendChild(this.el);
+                this.renderFiles();
+            }
+            this.render()
         }
 
         function ResizeLayer(parent) {
@@ -241,9 +413,11 @@
             this.init();
         }
         window.addEventListener('load', function () {
-            document.querySelector("#windows-container").classList.add("show");
+            document.querySelector(".desktop").classList.add("show");
             window.windowsController = new WindowsController();
             window.dragController = new DragController();
+            window.themeController = new ThemeController();
+            new FileListView(document.querySelector(".desktop"), fileSystem["C:"].Desktop)
         })
     </script>
 </body>

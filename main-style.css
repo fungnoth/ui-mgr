@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 html, body {
   height: 100vh;
   width: 100vw;
@@ -40,16 +41,23 @@ body {
   align-content: flex-start;
   flex-direction: column;
   justify-content: flex-start;
+  border: 1px solid #353535;
   animation: window-open 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  transition: 0.3s border-color;
+}
+.window.close {
+  animation: window-close 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  animation-fill-mode: forwards;
 }
 .window .header {
   display: flex;
-  width: 100%;
   align-content: center;
-  background: rgba(67, 67, 67, 0.3);
-  -webkit-backdrop-filter: blur(65px) brightness(0.5);
-  backdrop-filter: blur(65px) brightness(0.5);
-  padding: 14px;
+  justify-content: space-between;
+  padding: 0 15px;
+  width: 100%;
+  background: rgba(29, 29, 29, 0.7);
+  -webkit-backdrop-filter: blur(65px);
+  backdrop-filter: blur(65px);
   font-size: 13px;
   font-weight: 600;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1) inset;
@@ -57,6 +65,8 @@ body {
 }
 .window .header .title-bar {
   display: flex;
+  padding: 14px;
+  padding-left: 0;
 }
 .window .header .title-bar img {
   width: 23px;
@@ -66,12 +76,24 @@ body {
 .window .header .title-bar span {
   margin-left: 4px;
 }
+.window .title-btn {
+  height: 100%;
+  padding: 2px 4px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.window .title-btn, .window .title-btn span {
+  font-size: 18px;
+  font-weight: bold;
+}
 .window .menu {
   height: 100%;
   padding: 20px 10px;
-  background: rgba(0, 0, 0, 0.5);
-  -webkit-backdrop-filter: blur(65px) brightness(0.5);
-  backdrop-filter: blur(65px) brightness(0.5);
+  background: rgba(23, 23, 23, 0.85);
+  -webkit-backdrop-filter: blur(65px);
+  backdrop-filter: blur(65px);
   padding-right: 0;
   width: 140px;
   transition: 0.3s background-color;
@@ -110,6 +132,9 @@ body {
   -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
   background-color: rgba(255, 255, 255, 0.75);
+}
+.light .window {
+  border-color: #b8b8b8;
 }
 .light .content {
   background: #FFF;
@@ -171,7 +196,7 @@ body {
   cursor: nwse-resize;
 }
 
-.windows-container {
+.desktop {
   position: absolute;
   left: 0;
   top: 0;
@@ -183,10 +208,19 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
-  transition: 0.3s opacity;
+  transition: 0.6s opacity;
 }
-.windows-container.show {
+.desktop.show {
   opacity: 1;
+}
+
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .template {
@@ -202,6 +236,64 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+}
+@keyframes window-close {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+.file-icon-list {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.file-icon-list .file-icon {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.file-icon-list .file-icon .filename {
+  font-size: 13px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+}
+.file-icon-list .file-icon.selected {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.file-icon-list .file-icon .icon span {
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  font-size: 65px;
+}
+.file-icon-list.smaller {
+  padding: 10px;
+}
+.file-icon-list.smaller .file-icon {
+  width: 70px;
+  height: 70px;
+  margin: 15px;
+}
+.file-icon-list.smaller .icon span {
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  font-size: 55px;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
 /*# sourceMappingURL=main-style.css.map */
