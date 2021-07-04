@@ -15,4 +15,6 @@ Wallpaper from: https://unsplash.com/photos/lGCfApDzhYw
 
 ### Known Issues
 
-sadd
+- Nothing works besides **Dragging** and **Resizing windows**
+- **Window Resize** doesn't work as expected unless you drag the bottom right corner. <br>
+Will not be fixed until I suddenly feel like doing Maths. 
