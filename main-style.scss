@@ -19,6 +19,7 @@ body {
   background-repeat: no-repeat;
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
+  -webkit-user-select: none;
   user-select: none;
   overflow: hidden;
   & {
