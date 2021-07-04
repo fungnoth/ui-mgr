@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined");
 html, body {
   height: 100vh;
   width: 100vw;
@@ -144,6 +144,10 @@ body {
   -webkit-backdrop-filter: blur(30px);
   backdrop-filter: blur(30px);
 }
+.light .file-icon .icon > span.material-icons {
+  color: #acacac;
+  font-family: "Material Icons Outlined";
+}
 
 .resize-interface .resize-touch-area {
   position: absolute;
@@ -265,7 +269,6 @@ body {
 }
 .file-icon-list .file-icon .filename {
   font-size: 13px;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
   font-weight: 600;
 }
 .file-icon-list .file-icon.selected {
@@ -284,8 +287,19 @@ body {
   margin: 15px;
 }
 .file-icon-list.smaller .icon span {
-  text-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   font-size: 55px;
+}
+
+.desktop .file-icon-list .file-icon {
+  color: #efefef;
+}
+.desktop .file-icon-list .file-icon .filename {
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+}
+.desktop .file-icon-list .file-icon .icon > span {
+  font-family: "Material Icons" !important;
+  color: #efefef;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .flex-row {

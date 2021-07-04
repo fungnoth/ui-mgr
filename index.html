@@ -51,7 +51,7 @@
     </div>
     <div id="file-icon-template" class="file-icon template">
         <div class="icon">
-            <span class="material-icons material-icons-outlined">
+            <span class="material-icons">
                 folder
             </span>
         </div>
@@ -68,6 +68,11 @@
             this.el = null;
             this.lastClickTime = null;
             this.open = function() {
+                if (this.title === "Change Theme") {
+                    themeController.changeTheme()
+                    return;
+                }
+
                 let newWindow = new Window(windowsController)
                 newWindow.title = this.title;
                 if (this.content instanceof Object) {
@@ -130,6 +135,7 @@
         }
 
         function ThemeController() {
+            this.theme = null;
             this.themeList = ["dark", "light"];
 
             this.getSystemTheme = function() {
@@ -140,6 +146,11 @@
                 }
             }
             this.changeTheme = function(theme) {
+                if (theme === undefined) {
+                    let current = this.themeList.indexOf(this.theme);
+                    let target = (current + 1) % this.themeList.length;
+                    theme = this.themeList[target];
+                }
                 for (let item of this.themeList) {
                     document.body.classList.remove(item);
                 }
@@ -148,6 +159,7 @@
                 } else {
                     document.body.classList.add(this.themeList[0]);
                 }
+                this.theme = theme;
             }
             this.init = function () {
                 this.changeTheme(this.getSystemTheme());
@@ -185,7 +197,7 @@
             }
             this.closeWindow = function(targetWindow) {
                 let targetIndex = this.windows.indexOf(targetWindow);
-                if (targetWindow && targetIndex !== false) {
+                if (targetWindow && targetIndex !== -1) {
                     this.windows.splice(targetIndex, 1);
                     targetWindow.el.remove();
                     delete targetWindow;
@@ -333,7 +345,8 @@
                 "Desktop": {
                     "New Folder": {
                         "file.txt": "Welcome to Wikipedia,\nthe free encyclopedia that anyone can edit.\n6,329,854 articles in English"
-                    }
+                    },
+                    "Change Theme": null
                 }
             }
         }
@@ -420,7 +433,8 @@
             window.windowsController = new WindowsController();
             window.dragController = new DragController();
             window.themeController = new ThemeController();
-            new FileListView(document.querySelector(".desktop"), fileSystem["C:"].Desktop)
+            window.desktopListView = new FileListView(document.querySelector(".desktop"), fileSystem["C:"].Desktop);
+            window.desktopListView.el.classList.add("flex-column");
         })
     </script>
 </body>
