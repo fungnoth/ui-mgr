@@ -182,6 +182,13 @@
             this.bringWindowUp = function(targetWindow) {
                 this.topLayerIndex += 1
                 targetWindow.el.style.zIndex = this.topLayerIndex;
+                targetWindow.el.classList.remove("inactive");
+                for (let instance of this.windows) {
+                    if (instance === targetWindow) {
+                        continue;
+                    }
+                    instance.el.classList.add("inactive");
+                }
             }
             this.addWindow = function(newWindow) {
                 this.windows.push(newWindow);

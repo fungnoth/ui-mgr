@@ -5,6 +5,9 @@
   -webkit-backdrop-filter: $props;
   backdrop-filter: $props;
 }
+
+
+
 $color-light-text: #efefef;
 
 html, body {
@@ -29,10 +32,47 @@ body {
     //transition: 0.3s color;
   }
 }
+
+
+
 .main-area {
   display: flex;
   flex-grow: 1;
 }
+
+.inactive {
+  &, & .menu {
+    --blur-level: 0;
+    --opacity: 100%;
+    --filter: brightness(50%);
+  }
+}
+
+body, .dark {
+  --blur-level: 65px;
+  --opacity: 70%;
+  --filter: brightness(100%) grayscale(0%);
+  .menu {
+    --opacity: 85%;
+  }
+  .inactive {
+    --filter: brightness(150%) grayscale(0%);
+  }
+}
+
+.light {
+  --blur-level: 30px;
+  --opacity: 75%;
+
+  .inactive {
+    --filter: brightness(85%) grayscale(0%);
+    .menu {
+      --filter: brightness(90%) grayscale(0%);
+    }
+  }
+}
+
+
 
 .window {
   position: absolute;
@@ -61,8 +101,9 @@ body {
     justify-content: space-between;
     padding: 0 15px;
     width: 100%;
-    background: rgb(29 29 29 / 70%);
-    @include backdrop-filter(blur(65px));
+    background: rgb(29 29 29 / var(--opacity));
+    @include backdrop-filter(blur(var(--blur-level)));
+    filter: var(--filter);
     font-size: 13px;
     font-weight: 600;
     box-shadow: 0 0 15px rgb(0 0 0 / 10%) inset;
@@ -98,8 +139,9 @@ body {
   .menu {
     height: 100%;
     padding: 20px 10px;
-    background: rgb(23 23 23 / 85%);
-    @include backdrop-filter(blur(65px));
+    background: rgb(23 23 23 / var(--opacity));
+    @include backdrop-filter(blur(var(--blur-level)));
+    filter: var(--filter);
     padding-right: 0;
     width: 140px;
     transition: 0.3s background-color;
@@ -133,15 +175,18 @@ body {
     height: 100%;
     transition: 0.3s background-color;
   }
+
+
 }
+
 
 
 .light {
   color: #333;
   .header {
     //backdrop-filter: blur(65px);
-    @include backdrop-filter(blur(30px));
-    background-color: rgb(255 255 255 / 75%);
+    //@include backdrop-filter(blur(30px));
+    background-color: rgb(255 255 255 / var(--opacity));
   }
   .window {
     border-color: rgb(184 184 184);
@@ -151,14 +196,15 @@ body {
     background: #FFF;
   }
   .menu {
-    background: rgb(255 255 255 / 85%);
-    @include backdrop-filter(blur(30px));
+    background: rgb(255 255 255 / var(--opacity));
   }
   .file-icon .icon > span.material-icons   {
     color: #acacac;
     font-family: 'Material Icons Outlined';
   }
 }
+
+
 
 .resize-interface {
 
