@@ -38,6 +38,7 @@ body {
 .main-area {
   display: flex;
   flex-grow: 1;
+  margin-top: -2px;
 }
 
 .inactive {
@@ -45,6 +46,9 @@ body {
     --blur-level: 0;
     --opacity: 100%;
     --filter: brightness(50%);
+  }
+  .header > * {
+    color: #767676;
   }
 }
 
@@ -107,7 +111,10 @@ body, .dark {
     font-size: 13px;
     font-weight: 600;
     box-shadow: 0 0 15px rgb(0 0 0 / 10%) inset;
-    transition: 0.3s background-color;
+    transition: 0.3s;
+    transition-property: background-color, border-color;
+    border-bottom: 1px solid;
+    border-color:  rgb(29 29 29);
     .title-bar {
       display: flex;
       padding: 14px;
@@ -144,7 +151,10 @@ body, .dark {
     filter: var(--filter);
     padding-right: 0;
     width: 140px;
-    transition: 0.3s background-color;
+    border-right: 1px solid rgb(23 23 23);
+    margin-right: -1px;
+    transition: 0.3s;
+    transition-property:  background-color, border-color;
     ul {
       list-style: none;
       margin-block-start: 0em;
@@ -174,6 +184,7 @@ body, .dark {
     padding: 20px 15px;
     height: 100%;
     transition: 0.3s background-color;
+    margin-left: -1px;
   }
 
 
@@ -187,6 +198,7 @@ body, .dark {
     //backdrop-filter: blur(65px);
     //@include backdrop-filter(blur(30px));
     background-color: rgb(255 255 255 / var(--opacity));
+    border-color: rgb(255 255 255);
   }
   .window {
     border-color: rgb(184 184 184);
@@ -197,6 +209,7 @@ body, .dark {
   }
   .menu {
     background: rgb(255 255 255 / var(--opacity));
+    border-color: rgb(255 255 255);
   }
   .file-icon .icon > span.material-icons   {
     color: #acacac;
