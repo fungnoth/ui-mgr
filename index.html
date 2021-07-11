@@ -194,8 +194,8 @@
                 this.windows.push(newWindow);
                 this.spawnPos.x += 35;
                 this.spawnPos.y += 45;
-                if ((this.spawnPos.x > window.innerWidth)
-                    || (this.spawnPos.y > window.innerHeight)) {
+                if ((this.spawnPos.x > (window.innerWidth-35) )
+                    || (this.spawnPos.y > (window.innerHeight-35) )) {
                     this.spawnPos = Object.assign({}, defaultSpawnPos)
                 }
                 setTimeout(()=> {
