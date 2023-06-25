@@ -75,11 +75,11 @@ body .inactive, .dark .inactive {
   flex-direction: column;
   justify-content: flex-start;
   border: 1px solid #353535;
-  animation: window-open 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  animation: window-open 0.15s ease-out;
   transition: 0.3s border-color;
 }
 .window.close {
-  animation: window-close 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  animation: window-close 0.15s ease-in;
   animation-fill-mode: forwards;
 }
 .window .header {
@@ -273,22 +273,22 @@ body .inactive, .dark .inactive {
 
 @keyframes window-open {
   0% {
-    opacity: 0;
-    transform: scale(0.7);
+/*     opacity: 0; */
+    transform: scale(0);
   }
   100% {
-    opacity: 1;
+/*     opacity: 1; */
     transform: scale(1);
   }
 }
 @keyframes window-close {
   0% {
-    opacity: 1;
+/*     opacity: 1; */
     transform: scale(1);
   }
   100% {
-    opacity: 0;
-    transform: scale(0.7);
+/*     opacity: 0; */
+    transform: scale(1);
   }
 }
 .file-icon-list {
