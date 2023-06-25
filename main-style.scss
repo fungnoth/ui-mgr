@@ -92,10 +92,10 @@ body, .dark {
   flex-direction: column;
   justify-content: flex-start;
   border: 1px solid rgb(53 53 53);
-  animation: window-open 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+  animation: window-open 0.15s ease-out;
   transition: 0.3s border-color;
   &.close {
-    animation: window-close 0.25s cubic-bezier(0.46, 0.03, 0.52, 0.96);
+    animation: window-close 0.15s ease-in;
     animation-fill-mode: forwards;
   }
 
